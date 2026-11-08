@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101114">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Read a post shared from the BRIDGE community and open it in the app to join the conversation.">
+  <title>Shared post | BRIDGE - CONNECT &amp; SHARE</title>
+  <link rel="canonical" href="https://www.atlasthought.dev/post/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="BRIDGE - CONNECT &amp; SHARE">
+  <meta property="og:title" content="Shared post | BRIDGE - CONNECT &amp; SHARE">
+  <meta property="og:description" content="Read a post shared from the BRIDGE community and open it in the app to join the conversation.">
+  <meta property="og:url" content="https://www.atlasthought.dev/post/">
+  <meta property="og:image" content="https://www.atlasthought.dev/assets/social-preview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shared post | BRIDGE - CONNECT &amp; SHARE">
+  <meta name="twitter:description" content="Read a post shared from the BRIDGE community and open it in the app to join the conversation.">
+  <meta name="twitter:image" content="https://www.atlasthought.dev/assets/social-preview.jpg">
+  <link rel="stylesheet" href="../assets/bridge-share.css">
+  <style>
+    .post-copy { white-space: pre-wrap; overflow-wrap: anywhere; color: #d0d3da; }
+    .poll-preview { margin-top: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: .9rem; background: var(--card-soft); }
+    .poll-preview h3 { margin: 0 0 .75rem; font-size: 1.1rem; }
+    .poll-preview ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .5rem; }
+    .poll-preview li { border: 1px solid var(--border); border-radius: .7rem; padding: .65rem .8rem; color: #d0d3da; }
+    .post-image-list { display: flex; gap: .15rem; margin-top: 1rem; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: x mandatory; }
+    .post-image-list img { display: block; flex: 0 0 min(100%, 42rem); width: 100%; max-height: 34rem; object-fit: contain; scroll-snap-align: start; border: 1px solid var(--border); border-radius: .8rem; background: var(--card-soft); }
+    .post-image-list:has(img:only-child) { justify-content: center; }
+    .post-image-list img:only-child { flex-basis: min(100%, 42rem); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../"><span class="brand-name">BRIDGE</span><span class="brand-tagline">CONNECT &amp; SHARE</span></a>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">BRIDGE by atlasTHOUGHT</p>
+      <h1>Shared post</h1>
+      <p class="lead">A post shared from the BRIDGE community.</p>
+    </section>
+    <section class="deletion-card" aria-live="polite">
+      <p id="post-status" class="notice">Loading this post…</p>
+      <div id="post-details" hidden>
+        <p id="post-category" class="eyebrow"></p>
+        <h2 id="post-title"></h2>
+        <p id="post-author" class="fine-print"></p>
+        <p id="post-date" class="fine-print"></p>
+        <p id="post-description" class="post-copy"></p>
+        <section id="post-poll" class="poll-preview" hidden aria-label="Poll">
+          <h3 id="poll-question"></h3>
+          <ul id="poll-options"></ul>
+        </section>
+        <div id="post-images" class="post-image-list"></div>
+        <div class="button-row">
+          <a id="open-in-app" class="button" href="#">Open in BRIDGE</a>
+          <a class="button secondary" href="https://play.google.com/store/apps/details?id=com.atlasThought.Bridge" target="_blank" rel="noopener noreferrer">Get BRIDGE</a>
+        </div>
+        <p class="fine-print">Read the post here, or open it in BRIDGE to join the conversation.</p>
+      </div>
+    </section>
+    <p class="help-note">BRIDGE — CONNECT &amp; SHARE</p>
+  </main>
+  <footer class="site-footer"><span>BRIDGE — CONNECT &amp; SHARE</span><span>Operated by atlasTHOUGHT</span></footer>
+  <script type="module">
+    import { createClient } from "../assets/supabase-client.js";
+
+    const supabaseUrl = "https://ohvtqsjyvfctjapqpbtf.supabase.co";
+    const supabasePublishableKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9odnRxc2p5dmZjdGphcHFwYnRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg3MjI0MzMsImV4cCI6MjA3NDI5ODQzM30.eFZ2PzJP_DUJ9v1bwByJeIpAeafsTOYcRPjU2w1g4Ic";
+    const supabase = createClient(supabaseUrl, supabasePublishableKey, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    });
+    const status = document.getElementById("post-status");
+    const details = document.getElementById("post-details");
+    const postId = new URLSearchParams(window.location.search).get("id");
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const showError = (message) => {
+      status.textContent = message;
+      status.classList.add("error");
+    };
+    const setMeta = (selector, value) => document.querySelector(selector)?.setAttribute("content", value);
+
+    async function loadPost() {
+      if (!postId || !uuidPattern.test(postId)) {
+        showError("This post link is missing a valid post ID.");
+        return;
+      }
+      try {
+        const { data: post, error } = await supabase.from("posts")
+          .select("id,user_id,seed_author_name,title,description,category,created_at,image_url,image_urls,is_hidden")
+          .eq("id", postId)
+          .eq("is_hidden", false)
+          .maybeSingle();
+        if (error || !post) {
+          showError("This post is unavailable. It may have been removed or deleted.");
+          return;
+        }
+
+        const title = post.title?.trim() || "Post on BRIDGE";
+        const description = post.description?.trim() || "A post shared from the BRIDGE community.";
+        document.title = `${title} — BRIDGE`;
+        document.getElementById("post-category").textContent = post.category || "Community post";
+        document.getElementById("post-title").textContent = title;
+        document.getElementById("post-description").textContent = description;
+        let authorName = post.seed_author_name || "BRIDGE member";
+        if (post.user_id) {
+          const { data: authors } = await supabase.rpc("get_post_author_cards", { p_post_ids: [post.id] });
+          authorName = authors?.find((author) => author.user_id === post.user_id)?.display_name || authorName;
+        }
+        document.getElementById("post-author").textContent = `Posted by ${authorName}`;
+        document.getElementById("post-date").textContent = post.created_at
+          ? new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(post.created_at))
+          : "";
+        document.getElementById("open-in-app").href = `bridge://post/${encodeURIComponent(post.id)}`;
+
+        const { data: poll } = await supabase.from("polls")
+          .select("id,question")
+          .eq("post_id", post.id)
+          .maybeSingle();
+        if (poll) {
+          document.getElementById("poll-question").textContent = poll.question || "Community poll";
+          const { data: options } = await supabase.from("poll_options")
+            .select("label,position")
+            .eq("poll_id", poll.id)
+            .order("position", { ascending: true });
+          const list = document.getElementById("poll-options");
+          (options || []).forEach((option) => {
+            const item = document.createElement("li");
+            item.textContent = option.label;
+            list.appendChild(item);
+          });
+          document.getElementById("post-poll").hidden = false;
+        }
+
+        setMeta('meta[property="og:title"]', title);
+        setMeta('meta[property="og:description"]', description.slice(0, 280));
+        setMeta('meta[name="twitter:title"]', title);
+        setMeta('meta[name="twitter:description"]', description.slice(0, 280));
+        setMeta('meta[property="og:url"]', window.location.href);
+
+        const imageList = document.getElementById("post-images");
+        const imageUrls = [...new Set([...(Array.isArray(post.image_urls) ? post.image_urls : []), post.image_url].filter(Boolean))];
+        imageUrls.forEach((imageUrl, index) => {
+          try {
+            const parsed = new URL(imageUrl);
+            if (parsed.protocol !== "https:" || parsed.hostname !== "ohvtqsjyvfctjapqpbtf.supabase.co") return;
+            const image = document.createElement("img");
+            image.src = parsed.toString();
+            image.alt = `Image ${index + 1} attached to this BRIDGE post`;
+            image.loading = "lazy";
+            image.referrerPolicy = "no-referrer";
+            imageList.appendChild(image);
+            if (index === 0) setMeta('meta[property="og:image"]', parsed.toString());
+          } catch { /* Ignore malformed stored image URLs. */ }
+        });
+        details.hidden = false;
+        status.hidden = true;
+      } catch {
+        showError("Could not load this post. Check your connection and try again.");
+      }
+    }
+    void loadPost();
+  </script>
+</body>
+</html>
