@@ -1,0 +1,25 @@
+.deletion-content{max-width:800px}
+.deletion-card{padding:clamp(20px,5vw,36px);border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:0 16px 42px #10182012}
+.deletion-card>p{color:var(--muted)}
+.deletion-points{padding-left:22px;color:#36434d}
+.deletion-points li{margin:.55em 0}
+.deletion-auth-status{min-height:1.6em;margin:20px 0 12px;color:var(--muted);font-size:14px}
+.deletion-verified{padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#f7f9fa}
+.deletion-verified-label{display:block;color:var(--muted);font-size:12px}
+.deletion-verified-email{margin:2px 0 0;font-weight:700;overflow-wrap:anywhere}
+.deletion-form{margin-top:18px}
+.deletion-form label{display:block;margin-bottom:7px;font-size:14px;font-weight:700}
+.deletion-form textarea{display:block;width:100%;min-height:130px;padding:13px 14px;border:1px solid #cbd3d9;border-radius:12px;background:#fff;color:var(--ink);font:inherit;resize:vertical}
+.deletion-form textarea:focus-visible,.deletion-card button:focus-visible{outline:3px solid #4a7fe0;outline-offset:2px}
+.deletion-form textarea:disabled{background:#f2f4f5;color:#56616c}
+.deletion-char-count{text-align:right;color:var(--muted);font-size:12px;margin-top:4px}
+.deletion-card .deletion-signin,.deletion-card .deletion-submit{min-height:46px;display:inline-flex;align-items:center;justify-content:center;border:0;font:700 15px/1.2 'DM Sans',Arial,sans-serif;cursor:pointer;transition:opacity .15s ease,transform .15s ease}
+.deletion-card .deletion-signin:hover,.deletion-card .deletion-submit:hover:not(:disabled){transform:translateY(-1px)}
+.deletion-card .deletion-submit{background:#b42332;color:#fff;margin-top:13px}
+.deletion-card button:disabled{opacity:.58;cursor:not-allowed}
+.deletion-error{margin:14px 0 0;color:#a31926;font-size:14px}
+.deletion-success{padding:18px;border:1px solid #b9d8c5;border-radius:14px;background:#f1faf4;color:#173e27}
+.deletion-success h2{margin:0 0 9px;font-size:22px}
+.deletion-success p{margin:8px 0;color:#244b32}
+.deletion-support{margin-top:22px;padding:15px 18px}
+@media(max-width:600px){.deletion-card{padding:20px}.deletion-card .deletion-signin,.deletion-card .deletion-submit{width:100%}}
