@@ -14,10 +14,12 @@
   <meta property="og:description" content="Read a post shared from the BRIDGE community and open it in the app to join the conversation.">
   <meta property="og:url" content="https://www.atlasthought.dev/post/">
   <meta property="og:image" content="https://www.atlasthought.dev/assets/social-preview.jpg">
+  <meta property="og:image:alt" content="BRIDGE community post image">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Shared post | BRIDGE - CONNECT &amp; SHARE">
   <meta name="twitter:description" content="Read a post shared from the BRIDGE community and open it in the app to join the conversation.">
   <meta name="twitter:image" content="https://www.atlasthought.dev/assets/social-preview.jpg">
+  <meta name="twitter:image:alt" content="BRIDGE community post image">
   <link rel="stylesheet" href="../assets/bridge-share.css">
   <style>
     .post-copy { white-space: pre-wrap; overflow-wrap: anywhere; color: #d0d3da; }
@@ -152,7 +154,12 @@
             image.loading = "lazy";
             image.referrerPolicy = "no-referrer";
             imageList.appendChild(image);
-            if (index === 0) setMeta('meta[property="og:image"]', parsed.toString());
+            if (index === 0) {
+              setMeta('meta[property="og:image"]', parsed.toString());
+              setMeta('meta[name="twitter:image"]', parsed.toString());
+              setMeta('meta[property="og:image:alt"]', `Image attached to ${title}`);
+              setMeta('meta[name="twitter:image:alt"]', `Image attached to ${title}`);
+            }
           } catch { /* Ignore malformed stored image URLs. */ }
         });
         details.hidden = false;
