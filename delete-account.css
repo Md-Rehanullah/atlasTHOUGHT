@@ -3,6 +3,10 @@
 .deletion-card>p{color:var(--muted)}
 .deletion-points{padding-left:22px;color:#36434d}
 .deletion-points li{margin:.55em 0}
+.deletion-app-label{display:block;margin:14px 0 7px;font-size:14px;font-weight:700}
+.deletion-app-select,.deletion-email-input{display:block;width:100%;min-height:48px;padding:11px 13px;border:1px solid #cbd3d9;border-radius:12px;background:#fff;color:var(--ink);font:inherit}
+.deletion-app-select:focus-visible,.deletion-email-input:focus-visible{outline:3px solid #4a7fe0;outline-offset:2px}
+.deletion-email-input{margin-bottom:12px}
 .deletion-auth-status{min-height:1.6em;margin:20px 0 12px;color:var(--muted);font-size:14px}
 .deletion-verified{padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#f7f9fa}
 .deletion-verified-label{display:block;color:var(--muted);font-size:12px}
