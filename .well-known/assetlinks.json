@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.atlasThought.Rafiq",
+      "sha256_cert_fingerprints": [
+        "0F:F1:DD:9B:BD:BA:2C:AA:85:21:90:A6:7A:7D:C8:D6:78:BE:D9:7A:D2:90:76:86:8D:EC:BC:47:FE:67:E4:F2"
+      ]
+    }
+  }
+]
