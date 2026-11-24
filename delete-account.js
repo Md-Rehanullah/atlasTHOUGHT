@@ -90,7 +90,10 @@ function clearError() {
 function statusText() {
   if (accountCheck === "checking") return `Checking whether this Google account has a completed ${appName()} account...`;
   if (accountCheck === "found") return `We found your ${appName()} account. You can send a deletion request; the reason is optional.`;
-  if (accountCheck === "not_found") return `Account not found in ${appName()}. Check the selected app and continue with the Google account used for that app.`;
+  if (accountCheck === "not_found") {
+    const signedInAs = currentUser?.email ? ` for ${currentUser.email}` : "";
+    return `Account not found in ${appName()}${signedInAs}. Check that this is the Google account you use in ${appName()}, then choose Continue with another Google account to switch accounts.`;
+  }
   if (accountCheck === "not_google") return "Continue with the Google account you used to create your account in this app.";
   if (accountCheck === "error") return `We couldn't verify this account in ${appName()}. Please try again.`;
   return `Choose ${appName()}, then continue with Google to check that app's account.`;
@@ -100,6 +103,7 @@ function renderAuthState() {
   if (submitted) return;
   const eligible = isEligible();
   statusMessage.textContent = statusText();
+  statusMessage.dataset.state = accountCheck;
   statusMessage.hidden = false;
   signInButton.hidden = false;
   signInButton.disabled = submitting || accountCheck === "checking";
@@ -169,6 +173,7 @@ async function loadActiveSession() {
 
 signInButton.addEventListener("click", async () => {
   clearError();
+  try { sessionStorage.setItem("atlasthought-deletion-app", activeApp); } catch { /* The URL also carries the selected app. */ }
   signInButton.disabled = true;
   signInButton.textContent = "Opening Google sign-in...";
   try {
@@ -253,6 +258,7 @@ for (const [app, client] of Object.entries(clients)) {
 
 appSelect.addEventListener("change", async () => {
   activeApp = appSelect.value;
+  try { sessionStorage.setItem("atlasthought-deletion-app", activeApp); } catch { /* App selection still works without storage. */ }
   submitted = false;
   form.hidden = true;
   form.reset();
@@ -264,8 +270,14 @@ appSelect.addEventListener("change", async () => {
 });
 
 const requestedApp = new URLSearchParams(window.location.search).get("app");
-if (requestedApp === "rafiq" || requestedApp === "bridge") appSelect.value = requestedApp;
+let rememberedApp = null;
+try { rememberedApp = sessionStorage.getItem("atlasthought-deletion-app"); } catch { /* The query parameter remains available. */ }
+const initialApp = requestedApp === "rafiq" || requestedApp === "bridge"
+  ? requestedApp
+  : rememberedApp;
+if (initialApp === "rafiq" || initialApp === "bridge") appSelect.value = initialApp;
 activeApp = appSelect.value;
+try { sessionStorage.setItem("atlasthought-deletion-app", activeApp); } catch { /* Selection can still be read from the URL. */ }
 configureAppContent();
 await loadActiveSession();
 
