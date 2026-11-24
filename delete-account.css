@@ -8,7 +8,8 @@
 .deletion-app-select:focus-visible,.deletion-email-input:focus-visible{outline:3px solid #4a7fe0;outline-offset:2px}
 .deletion-email-input{margin-bottom:12px}
 .deletion-auth-status{min-height:1.6em;margin:20px 0 12px;color:var(--muted);font-size:14px}
-.deletion-auth-status[data-state="not_found"]{min-height:0;padding:14px 16px;border:2px solid #a71927;border-left-width:6px;border-radius:12px;background:#fff0f1;color:#76111d;font-size:15px;font-weight:800;line-height:1.5;box-shadow:0 4px 14px #a7192718}
+.deletion-auth-status[data-state="not_found"],.deletion-auth-status[data-state="error"]{min-height:0;padding:14px 16px;border:2px solid #a71927;border-left-width:6px;border-radius:12px;background:#fff0f1;color:#76111d;font-size:15px;font-weight:800;line-height:1.5;box-shadow:0 4px 14px #a7192718}
+.deletion-auth-status[data-state="error"]{border-color:#b45309;background:#fff7ed;color:#7c2d12;box-shadow:0 4px 14px #b4530918}
 .deletion-verified{padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#f7f9fa}
 .deletion-verified-label{display:block;color:var(--muted);font-size:12px}
 .deletion-verified-email{margin:2px 0 0;font-weight:700;overflow-wrap:anywhere}
