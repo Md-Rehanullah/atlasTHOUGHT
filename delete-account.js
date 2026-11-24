@@ -71,8 +71,8 @@ function configureAppContent() {
   verifiedLabel.textContent = `Verified ${isRafiq ? "Rafiq" : "BRIDGE"} Google account`;
   privacyLink.href = isRafiq ? "rafiq-privacy.html" : "privacy.html";
   privacyLink.textContent = isRafiq ? "Rafiq Privacy Policy" : "BRIDGE Privacy Policy";
-  supportLink.href = isRafiq ? "support.html" : "mailto:bridgesupport@atlasthought.dev";
-  supportLink.textContent = isRafiq ? "atlasTHOUGHT Support" : "bridgesupport@atlasthought.dev";
+  supportLink.href = isRafiq ? "mailto:rafiqsupport@atlasthought.dev" : "mailto:bridgesupport@atlasthought.dev";
+  supportLink.textContent = isRafiq ? "rafiqsupport@atlasthought.dev" : "bridgesupport@atlasthought.dev";
   successCopy.innerHTML = `Your verified ${isRafiq ? "Rafiq" : "BRIDGE"} account deletion request has been received. We may contact you at <strong id="deletion-success-email"></strong> if more information is needed.`;
   successFollowup.textContent = "This request is reviewed by the selected app's support team. It does not immediately delete the account. You can still use the in-app deletion option when available.";
 }
